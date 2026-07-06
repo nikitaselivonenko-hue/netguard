@@ -1,0 +1,4 @@
+scapy==2.5.0
+flask==3.0.3
+flask-wtf==1.2.1
+requests==2.31.0

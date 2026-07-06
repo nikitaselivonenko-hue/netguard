@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Live Network Monitoring</h2>
+<p>NetGuard is running. Alerts will appear below.</p>
+<div class="mb-3">
+    <a href="/generate-demo" class="btn btn-outline-secondary btn-sm">Generate Demo Alerts</a>
+    <a href="/upload" class="btn btn-outline-primary btn-sm">Upload PCAP</a>
+</div>
+<div id="alert-container" class="list-group"></div>
+<script>
+    async function fetchAlerts() {
+        const resp = await fetch('/api/alerts');
+        const alerts = await resp.json();
+        const container = document.getElementById('alert-container');
+        container.innerHTML = alerts.slice(0, 20).map(a =>
+            `<div class="list-group-item list-group-item-${a.type.includes('Spoofing') ? 'danger' : 'warning'}">
+                <strong>${a.timestamp}</strong> [${a.type}] ${a.src} → ${a.dst}: ${a.desc}
+            </div>`).join('');
+    }
+    setInterval(fetchAlerts, 3000);
+    fetchAlerts();
+</script>
+{% endblock %}
